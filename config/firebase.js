@@ -1,13 +1,17 @@
 const admin = require("firebase-admin");
+const path  = require("path");
 
-let credentials;
+let creds;
+
 if (process.env.FIREBASE_SERVICE_ACCOUNT) {
-  credentials = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
-} else {
-  credentials = require("../serviceAccountKey.json"); // yereldeki dosya
+  creds = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+}
+else {
+  const keyPath = path.resolve(__dirname, "../serviceAccountKey.json"); 
+  creds = require(keyPath);
 }
 
 admin.initializeApp({
-  credential: admin.credential.cert(credentials),
+  credential: admin.credential.cert(creds),
   databaseURL: process.env.FIREBASE_DB_URL,
 });

@@ -1,13 +1,15 @@
-const admin = require("firebase-admin");
+// backend/config/firebase.js
+const { initializeApp, cert } = require('firebase-admin/app');
+const { getDatabase }        = require('firebase-admin/database');
 
-if (!process.env.FIREBASE_SERVICE_ACCOUNT) {
-  console.error("ENV FIREBASE_SERVICE_ACCOUNT yok!");
-  process.exit(1);
-}
+if (!process.env.FIREBASE_SERVICE_ACCOUNT)
+  throw new Error('FIREBASE_SERVICE_ACCOUNT env yok!');
 
-const creds = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+const serviceKey = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
 
-admin.initializeApp({
-  credential: admin.credential.cert(creds),
-  databaseURL: process.env.FIREBASE_DB_URL,
+initializeApp({
+  credential : cert(serviceKey),
+  databaseURL: process.env.FIREBASE_DB_URL
 });
+
+module.exports = getDatabase();      // <-- doğrudan DB nesnesini dışa aktar

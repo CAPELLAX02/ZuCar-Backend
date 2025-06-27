@@ -1,43 +1,40 @@
-const database = require('../config/firebase');
+// ***** Doğru import *****
+const db = require('../config/firebase');   // artık db.ref kullanabilirsin
+// eğer { db } diye export ettiysen: const { db } = require('../config/firebase');
 
 // ------------------ KAYDET ------------------
-exports.kaydet = async (req, res) => {
-  const { kod, islemler, custom = false } = req.body;   // ✨ custom param
+exports.kaydet = async (req, res, next) => {
+  try {
+    const { kod, islemler, custom = false } = req.body;
+    if (!kod || !Array.isArray(islemler))
+      return res.status(400).json({ message: 'Eksik veri' });
 
-  if (!kod || !Array.isArray(islemler))
-    return res.status(400).json({ message: "Eksik veri" });
+    const ref = db.ref(`kodlar/${kod}`);
 
-  const ref = database.ref(`kodlar/${kod}`);
+    if ((await ref.once('value')).exists())
+      return res.status(409).json({ message: 'Kod zaten kayıtlı' });
 
-  // — kod zaten var mı?
-  const snap = await ref.once('value');
-  if (snap.exists())
-    return res.status(409).json({ message: "Kod zaten kayıtlı" });
-
-  ref.set({
-    islemler,
-    tarih: new Date().toISOString(),
-    custom: !!custom            // ✨ kaydet
-  })
-    .then(() => res.json({ message: "Veri kaydedildi" }))
-    .catch(err =>
-      res.status(500).json({ message: "Firebase hatası", error: err })
-    );
+    await ref.set({
+      islemler,
+      tarih : new Date().toISOString(),
+      custom: !!custom
+    });
+    res.json({ ok: true });
+  } catch (err) { next(err); }
 };
 
 // ------------------ KOD SORGULA ------------------
-exports.kodSorgula = (req, res) => {
-  database.ref(`kodlar/${req.params.kod}`).once('value')
-    .then(snap => snap.exists()
-      ? res.json(snap.val())
-      : res.status(404).json({ message: "Kod bulunamadı" })
-    )
-    .catch(() => res.status(500).json({ message: "Bir hata oluştu" }));
+exports.kodSorgula = (req, res, next) => {
+  db.ref(`kodlar/${req.params.kod}`).once('value')
+    .then(s => s.exists()
+      ? res.json(s.val())
+      : res.status(404).json({ message: 'Kod bulunamadı' }))
+    .catch(next);
 };
 
 // ------------------ TÜM KAYITLAR ------------------
-exports.tumKayitlar = (req, res) => {
-  database.ref("kodlar").once('value')
-    .then(snap => res.json(snap.val() || {}))   // custom alanı dahil
-    .catch(() => res.status(500).json({ message: "Bir hata oluştu" }));
+exports.tumKayitlar = (req, res, next) => {
+  db.ref('kodlar').once('value')
+    .then(s => res.json(s.val() || {}))
+    .catch(next);
 };

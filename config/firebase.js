@@ -1,9 +1,13 @@
-const admin = require('firebase-admin');
-const serviceAccount = require('../serviceAccountKey.json');
+const admin = require("firebase-admin");
+
+let credentials;
+if (process.env.FIREBASE_SERVICE_ACCOUNT) {
+  credentials = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+} else {
+  credentials = require("../serviceAccountKey.json"); // yereldeki dosya
+}
 
 admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-  databaseURL: "https://oto-kaplama-default-rtdb.firebaseio.com"
+  credential: admin.credential.cert(credentials),
+  databaseURL: process.env.FIREBASE_DB_URL,
 });
-
-module.exports = admin.database();

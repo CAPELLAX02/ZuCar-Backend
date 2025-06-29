@@ -11,7 +11,7 @@ app.use(cors({
     // 'http://localhost:5500',
     // 'http://localhost:5173',
     'https://zu-car-frontend.vercel.app',
-    'https://www.zucararackaplama.com/'
+    'https://www.zucararackaplama.com'
   ],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization']

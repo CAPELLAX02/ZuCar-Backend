@@ -16,10 +16,10 @@ exports.postContact = asyncHandler(async (req, res) => {
         .replace(/{{recipientName}}/g, 'ZuCar');
     
     await transporter.sendMail({
-    from   : `"${name}" <${email}>`,
-    to     : 'ahmetatar002@gmail.com',
-    subject: `ZuCar | Yeni İletişim Mesajı`,
-    html,
+        from   : `"${name}" <${email}>`,
+        to     : 'ahmetatar002@gmail.com',
+        subject: `ZuCar | Yeni İletişim Mesajı`,
+        html,
     });
 
     res.status(202).json({ message: 'Mesaj alındı, yakında dönüş yapılacak.' });

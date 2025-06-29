@@ -7,10 +7,11 @@ const { PORT } = require("./config/env")
 app.use(express.json());
 app.use(cors({
   origin: [
-    'http://localhost:63342',
-    'http://localhost:5500',
-    'http://localhost:5173',
-    'https://zu-car-frontend.vercel.app'
+    // 'http://localhost:63342',
+    // 'http://localhost:5500',
+    // 'http://localhost:5173',
+    'https://zu-car-frontend.vercel.app',
+    'https://www.zucararackaplama.com/'
   ],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization']

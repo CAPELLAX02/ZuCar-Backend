@@ -17,7 +17,7 @@ exports.postContact = asyncHandler(async (req, res) => {
     
     await transporter.sendMail({
         from   : `"${name}" <${email}>`,
-        to     : 'osmanozer2002@gmail.com@gmail.com',
+        to     : 'osmanozer2002@gmail.com',
         subject: `ZuCar | Yeni İletişim Mesajı`,
         html,
     });

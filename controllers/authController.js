@@ -12,12 +12,3 @@ exports.login = (req, res) => {
   const token = jwt.sign({ username }, JWT_SECRET, { expiresIn: '1h' });
   res.json({ token });
 };
-
-exports.changePassword = (req, res) => {
-  const { oldPassword, newPassword } = req.body;
-  if (oldPassword !== adminPassword) {
-    return res.status(401).json({ message: "Eski şifre yanlış!" });
-  }
-  adminPassword = newPassword;
-  res.json({ message: "Şifre başarıyla değiştirildi" });
-};
